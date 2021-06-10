@@ -1,19 +1,37 @@
-version: '2'
+version: '3.8'
 services:
   loggerservice:
-    build: loggerservice/
-    command: npm start #npm run dev
+    build:
+      context: ./loggerservice
+      target: release
+    command: npm start 
     volumes:
-      - ./loggerservice:/usr/app/
+      - ./loggerservice:/usr/app
+      - /usr/app/node_modules
     ports:
       - "8081:8081"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8081/usage.log"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   timerservice:
-    build: timerservice/
-    command: npm start #npm run dev
+    build:
+      context: ./timerservice
+      target: release
+    volumes:
+      - ./timerservice:/usr/app
+      - /usr/app/node_modules
+    command: npm start 
     environment:
-        loggerservice: http://loggerservice:8081
+        loggerserviceUrl: http://loggerservice:8081
     ports:
         - "8080:8080"
     depends_on:
         - loggerservice
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

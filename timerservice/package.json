@@ -4,7 +4,7 @@
   "description": "",
   "main": "timerservice.js",
   "scripts": {
-    "start": "loggerserviceUrl=$loggerservice TZ=UTC nodemon .",
+    "start": "loggerserviceUrl=$loggerserviceUrl TZ=UTC nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

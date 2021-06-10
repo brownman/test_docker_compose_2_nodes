@@ -5,7 +5,8 @@ COPY package*.json /usr/app/
 
 #install deps
 FROM base as dependencies
-ENV NODE_ENV=production 
+# ENV NODE_ENV=production 
+RUN npm install
 RUN npm ci
 
 
@@ -14,7 +15,7 @@ FROM dependencies AS release
 # copy production node_modules
 #COPY --from=dependencies /root/chat/prod_node_modules ./node_modules
 # copy app sources
-COPY . .
+COPY . /usr/app/
 # expose port and define CMD
 EXPOSE 8081
 CMD npm run start

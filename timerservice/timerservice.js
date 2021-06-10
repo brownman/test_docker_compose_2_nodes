@@ -3,23 +3,30 @@ const express = require("express");
 const app = express();
 const port = 8080;
 
+//validations:
+if (!process.env.loggerserviceUrl) {
+  console.log("ENV: loggerserviceUrl is not set");
+  process.exit(1);
+}
+
+
+const loggerserviceUrl = process.env.loggerserviceUrl + "/log";
+
+
 app.get("/alive", (req, res) => {
   res.send("timerservice.js");
 });
 
 app.get("/", (req, res) => {
-  if (!process.env.loggerserviceUrl) {
-    console.log("ENV: loggerserviceUrl is not set");
-    process.exit(1);
-  }
-  const url_loggerservice=process.env.loggerserviceUrl + "/log";
-  console.log('try post to ' + url_loggerservice)
+  console.log("try post to " + loggerserviceUrl);
   axios
-    .post(url_loggerservice, { time: Date() })
-    .then(() => {
-      res.send("Time Is " + Date());
+    .post(loggerserviceUrl, { time: Date() })
+    .then((res_tmp) => {
+      console.log(res_tmp.data);
+      res.send(res_tmp.data);
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err.message);
       res.send("error reporting log");
     });
 });

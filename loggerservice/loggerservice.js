@@ -5,43 +5,41 @@ const fs = require("fs");
 
 const port = 8081;
 const filePath = path.join(__dirname, "usage.log");
-console.log({filePath})
+console.log({ filePath });
 
 app.use(express.json());
 
 app.get("/usage.log", (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  fs.promises.readFile(filePath)
-  .then((data) => {
-    res.send(data);
-  })
-  .catch((e) => {
-      console.error(e)
-    res.send('error loading file:' + filePath);
-  });
+  res.setHeader("Content-Type", "application/json");
+  fs.promises
+    .readFile(filePath)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((e) => {
+      console.error(e);
+      res.send("error loading file:" + filePath);
+    });
 });
 app.get("/", (req, res) => {
   res.send("loggerservice");
 });
 
 app.post("/log", (req, res) => {
-  console.log(req.body);
   if (req.body && req.body && req.body.time) {
+    console.log('got data:', req.body.time);
+
     fs.promises
       .appendFile(filePath, "read at " + req.body.time + "\n")
       .then(() => {
-        res.send("done writing file");
-        return;
+        return res.send("done writing file");
       })
       .catch((e) => {
-        console.log({ e });
-        res.send("error writing file: ");
-        return;
+        console.log("e.message", e.message);
+        return res.send("error writing file: ");
       });
   } else {
-    res.send("error extracting record");
-
-    return;
+    return res.send("error extracting record");
   }
 });
 
