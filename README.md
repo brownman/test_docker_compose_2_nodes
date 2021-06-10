@@ -39,4 +39,6 @@ API:
 - will print the content the log file
 
 
-
+how to run ?
+---- 
+- run `./start.sh`
