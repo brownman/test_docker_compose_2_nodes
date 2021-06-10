@@ -1,0 +1,19 @@
+version: '2'
+services:
+  loggerservice:
+    build: loggerservice/
+    command: npm start #npm run dev
+    volumes:
+      - ./loggerservice:/usr/app/
+    ports:
+      - "8081:8081"
+
+  timerservice:
+    build: timerservice/
+    command: npm start #npm run dev
+    environment:
+        loggerservice: http://loggerservice:8081
+    ports:
+        - "8080:8080"
+    depends_on:
+        - loggerservice
