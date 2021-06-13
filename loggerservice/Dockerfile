@@ -6,7 +6,6 @@ COPY package*.json /usr/app/
 #install deps
 FROM base as dependencies
 # ENV NODE_ENV=production 
-RUN npm install
 RUN npm ci
 
 
